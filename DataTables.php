@@ -29,7 +29,8 @@ $wgExtensionCredits['other'][] = array(
 	'description' 	=> 'Datatables jQuery library for MediaWiki',
 	'author' 		=> array(
 		'[[User:Drenfro|Daniel Renfro]] (Mediawiki Extension)',
-		'Allan Jardine (Javascript/jQuery library)'
+		'Allan Jardine (Javascript/jQuery library)',
+		'[https://www.salebot.wiki/page/User:BotDev.One BotDev] (salebot.wiki)'
 	),
 	'version' 		=> MW_DATATABLES_VERSION
 );
@@ -128,18 +129,25 @@ class DataTables {
         );
     }
 
+	
 	public static function register( $resourceLoader ) {
-		global $wgExtensionAssetsPath;
+	global $wgExtensionAssetsPath;
 
-		$localpath = dirname( __FILE__ );
-		$remotepath = "$wgExtensionAssetsPath/DataTables";
+	$localpath = dirname( __FILE__ );
+	$remotepath = "$wgExtensionAssetsPath/DataTables";
 
-		foreach ( self::getModules() as $name => $resources ) {
-			$resourceLoader->register(
-				$name, new ResourceLoaderFileModule( $resources, $localpath, $remotepath )
-			);
-		}
-
-		return true;
+	foreach ( self::getModules() as $name => $resources ) {
+		$resourceLoader->register(
+			$name, [
+				'scripts' => $resources['scripts'],
+				'styles' => $resources['styles'],
+				'messages' => $resources['messages'],
+				'position' => $resources['position'],
+				'localBasePath' => $localpath,
+				'remoteExtPath' => $remotepath,
+			]
+		);
+	}
+	return true;
 	}
 }
